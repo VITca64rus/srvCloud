@@ -1,0 +1,66 @@
+version: "3"
+
+volumes:
+  db_data:
+  dist:
+
+services:
+  db:
+    image: mysql
+    command: --default-authentication-plugin=mysql_native_password
+    env_file:
+      - ./python-backend/.env
+    environment:
+      MYSQL_ROOT_PASSWORD: ${SRVCLOUD_ROOT_PASS}
+      MYSQL_DATABASE: ${SRVCLOUD_DB_DATABASE}
+      MYSQL_USER: ${SRVCLOUD_DB_USER}
+      MYSQL_PASSWORD: ${SRVCLOUD_DB_PASS}
+    volumes:
+      - db_data:/var/lib/mysql
+
+  python-backend:
+    build:
+      context: ./python-backend/ 
+    depends_on:
+      - db
+    volumes:
+      - ./python-backend/app/:/python-backend/app/
+    env_file:
+      - ./python-backend/.env
+
+  redis:
+    image: redis:alpine
+    ports:
+      - "6379:6379"
+    command: >
+        --requirepass ${REDIS_PASSWORD}
+
+  celery:
+    build:
+      context: ./python-backend/
+      dockerfile: DockerfileCelery
+    depends_on:
+      - db
+    env_file:
+      - ./python-backend/.env
+
+  flower:
+    image: mher/flower:0.9.7
+    command: ["flower",
+              "--broker=redis://${REDIS_HOST}:${REDIS_PASSWORD}@${REDIS_HOST}:${REDIS_PORT}",
+              "--port=5555",
+              "--basic_auth=${FLOWER_USER}:${FLOWER_PASSWORD}",
+              "--url_prefix=flower"
+             ]
+    ports:
+        - 5555:5555
+
+  nginx:
+    image: nginx
+    ports:
+      - '80:80'
+    depends_on:
+      - python-backend
+    volumes:
+      - ./nginx:/etc/nginx/conf.d
+      - dist:/usr/share/dist

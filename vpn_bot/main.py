@@ -2,6 +2,7 @@ import logging
 import os
 
 import markups as nav
+import srv_cloud_helper
 from aiogram import Bot, Dispatcher, executor, types
 from aiogram.types.message import ContentType
 
@@ -14,6 +15,11 @@ dp = Dispatcher(bot)
 @dp.message_handler(commands=['start' ])
 async def start (message: types.Message):
     '''Command start'''
+    if await srv_cloud_helper.add_user(message.from_user.id,
+                                       message.from_user.first_name,
+                                       message.from_user.last_name,
+                                       message.from_user.username) is False:
+        await bot.send_message(message.from_user.id, nav.WRONG, reply_markup = nav.mainMenu)
     message_start = f'🖖 Привет {message.from_user.first_name}!\n\n{nav.ABOUT_BOT}'
     await bot.send_message(message.from_user.id, message_start, reply_markup = nav.mainMenu)
 

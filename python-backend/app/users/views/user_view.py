@@ -31,7 +31,6 @@ class User(APIView):
             'last_name': request.data.get('last_name'),
             'username': request.data.get('username')
         }
-        print(add_user)
         user = USERS.objects.filter(tg_id=add_user['tg_id']).first()
         if user is not None:
             user.first_name = add_user['first_name']

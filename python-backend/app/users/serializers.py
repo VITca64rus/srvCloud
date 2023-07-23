@@ -8,4 +8,4 @@ class UsersSerializer(serializers.ModelSerializer):
     class Meta:
         '''meta for choise fields'''
         model = USERS
-        fields = ('tg_id', 'tg_link', 'tg_name')
+        fields = ('tg_id', 'first_name', 'last_name', 'username')

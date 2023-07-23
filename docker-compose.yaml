@@ -28,14 +28,6 @@ services:
     env_file:
       - ./python-backend/.env
 
-  vpn_bot:
-    build:
-      context: ./vpn_bot/
-    volumes:
-      - ./vpn_bot/:/vpn_bot/
-    env_file:
-      - ./python-backend/.env
-
   redis:
     image: redis:alpine
     ports:
@@ -72,3 +64,16 @@ services:
     volumes:
       - ./nginx:/etc/nginx/conf.d
       - dist:/usr/share/dist
+
+  # vpn_bot:
+  #   depends_on:
+  #     - python-backend
+  #     - celery
+  #     - flower
+  #     - nginx
+  #   build:
+  #     context: ./vpn_bot/
+  #   volumes:
+  #     - ./vpn_bot/:/vpn_bot/
+  #   env_file:
+  #     - ./python-backend/.env

@@ -1,7 +1,8 @@
+'''urls for app ping'''
 from django.urls import path
-from ping.views import PingView
+from ping.views import ping_view
 
 
 urlpatterns = [
-    path('ping/', PingView.Ping.as_view())
+    path('ping/', ping_view.Ping.as_view())
 ]

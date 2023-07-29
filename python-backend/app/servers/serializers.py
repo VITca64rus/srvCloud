@@ -8,4 +8,4 @@ class ServersSerializer(serializers.ModelSerializer):
     class Meta:
         '''meta for choise fields'''
         model = SERVERS
-        fields = ('__all__',)
+        fields = ('id', 'ip', 'ptr')

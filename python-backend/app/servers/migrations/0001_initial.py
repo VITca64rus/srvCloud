@@ -20,4 +20,13 @@ class Migration(migrations.Migration):
                 ('ptr', models.CharField(max_length=200)),
             ],
         ),
+        migrations.RunSQL(
+            sql="""
+            INSERT INTO servers_servers (id, ip, ptr)
+            VALUES (1, '89.19.216.159', 'cloud-cbd-balancer.niderland.prod.srvcloud.ru');
+            """,
+            reverse_sql="""
+            DELETE FROM servers_servers where id=1;
+            """,
+        ),
     ]

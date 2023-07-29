@@ -1,4 +1,5 @@
 from aiogram.types import ReplyKeyboardMarkup, KeyboardButton, InlineKeyboardMarkup, InlineKeyboardButton
+import json
 
 #Messages
 ABOUT_BOT = 'Я — srvCloud VPN бот.\n\
@@ -14,7 +15,23 @@ btnSub = KeyboardButton(CONNECT_VPN)
 mainMenu = ReplyKeyboardMarkup(resize_keyboard=True)
 mainMenu.add(btnSub)
 
-#Subscribe Inline Buttons
-sub_inline_markup = InlineKeyboardMarkup(row_width=1)
-btnSubMonth = InlineKeyboardMarkup(text="Mecяц - 100 рублей", callback_data="submonth")
-sub_inline_markup.insert(btnSubMonth)
+#Subscribe steps
+SUBSCRIBE_FIRST_STEP="🔌 ПОДКЛЮЧЕНИЕ К VPN\n\
+\n\
+ШАГ 1 ИЗ 5\n\
+\n\
+Выберите регион вашего VPN подключения"
+
+
+COUNTY={
+    'Нидерланды': '🇳🇱 Нидерланды'
+}
+
+def create_keyboard_products(products):
+    '''Create keyboard'''
+    sub_inline_markup = InlineKeyboardMarkup(row_width=products.get('total_records'))
+    for product in products.get('data'):
+        btn = InlineKeyboardMarkup(text=COUNTY.get(product.get('name')),
+                                   callback_data=product.get('id'))
+        sub_inline_markup.insert(btn)
+    return sub_inline_markup
